@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Processing Template</title>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/addons/p5.dom.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/p5.js"></script>
+
+    <script>
+    
+    //declaring global variables
+        var obY;
+        var obYSpeed;
+        var cX;
+        var cY;
+        var lives;
+        var characterSpeed;
+        var characters = [];
+        var score;
+
+
+        function setup() {
+            createCanvas(500, 500); //the length and width of the canvas
+            
+            //giving the variables a value
+            obY = 5;
+            obYSpeed = 2;
+            cX = 5
+            cY = 155
+            lives = 3;
+            characterSpeed = 2;
+            score = 0;
+
+
+
+        }
+
+        function draw() {
+            background(0); //the color of the canvas
+            
+            //calling the functions
+            block();
+            obstacle(75);
+            obstacle(175);
+            obstacle(275);
+            obstacle(375);
+            obstacle(475);
+            obstacleMoved();
+
+            //text displayed in the game
+            textSize(40);
+            fill(255);
+            text("Lives: " + lives, 80, 35);
+            textAlign(CENTER);
+            textSize(40);
+            fill(255);
+            text("Score: " + score, 330, 35);
+            textAlign(CENTER);
+
+            //inputs a new charcter into the character array while running the functions
+            for (var i = 0; i < characters.length; i++) {
+                characters[i].move();
+                characters[i].display();
+                characters[i].avoidObs();
+                characters[i].loseLife();
+                characters[i].addScore();
+            }
+
+        }
+
+        //creating the pick obstacle blocks 
+        function block() {
+            fill(255, 0, 120);
+            for (var lowBX = 0; lowBX <= width; lowBX = lowBX + 200) {
+                rect(lowBX, height - (height / 2), 50, height / 2)
+            }
+            for (var shortLowBX = 100; shortLowBX <= width; shortLowBX = shortLowBX + 200) {
+                rect(shortLowBX, height - (height / 3), 50, height / 3)
+            }
+            for (var highBX = 0; highBX <= width; highBX = highBX + 200) {
+                rect(highBX, height - (height - (height / 3)) - (height - (height / 2)), 50, height - (height / 2))
+            }
+            for (var shortHighBX = 100; shortHighBX <= width; shortHighBX = shortHighBX + 200) {
+                rect(shortHighBX, height - (height - (height / 2)) - (height - (height / 3)), 50, height - (height / 3))
+            }
+
+        }
+        
+        //code for the obstacle(bombs) that go down the canvas
+        function obstacle(obX) {
+            stroke(255)
+            line(obX, obY, obX, obY + 20);
+            fill(255);
+            ellipse(obX, obY + 20, 10, 10);
+
+        }
+       //makes the obstacle(bombs) move
+        function obstacleMoved() {
+            obY = obY + obYSpeed;
+
+            if (obY > height) {
+                obY = 5
+
+            }
+        }
+
+         //makes the character(ball) that is used to move around the game
+        function Character() {
+            this.x = cX
+            this.y = cY
+            this.speed = characterSpeed
+            this.obsY = obY
+
+
+             //displays the character(ball)
+            this.display = function() {
+                fill(random(255), random(255), random(255));
+                ellipse(this.x, this.y, 30, 30);
+
+            }
+           
+            //makes the ball move when the arrow keys are pressed
+            this.move = function() {
+                if (keyCode == UP_ARROW && keyIsPressed === true) {
+                    this.y = this.y - this.speed
+                }
+                if (keyCode == DOWN_ARROW && keyIsPressed === true) {
+                    this.y = this.y + this.speed
+                }
+                if (keyCode == RIGHT_ARROW && keyIsPressed === true) {
+                    this.x = this.x + this.speed
+                }
+                if (keyCode == LEFT_ARROW && keyIsPressed === true) {
+                    this.x = this.x - this.speed
+                }
+                if (this.x > 0 || this.y < width) {
+                    this.x = constrain(this.x, 0, width)
+                }
+                if (this.y > 0 || this.y < height) {
+                    this.y = constrain(this.y, 0, width)
+                }
+
+            }
+             
+             //prevents the ball from going through the pink obstacles
+            this.avoidObs = function() {
+
+                if (this.x < 50) {
+                    this.y = constrain(this.y, 183, 237)
+                }
+                else if (50 < this.x && this.x < 100) {
+                    this.y = constrain(this.y, 0, height);
+
+                    if (0 < this.y && this.y < 170) {
+                        this.x = constrain(this.x, 65, 85);
+                    }
+                    else if (170 < this.y && this.y < 250) {
+                        this.x = constrain(this.x, 0, 85);
+                    }
+                    else if (250 < this.y && this.y < 335) {
+                        this.x = constrain(this.x, 65, 200);
+                    }
+                    else if (335 < this.y && this.y < height) {
+                        this.x = constrain(this.x, 65, 85);
+                    }
+                }
+
+
+                if (100 < this.x && this.x < 150) {
+                    this.y = constrain(this.y, 265, 319)
+                }
+                else if (150 < this.x && this.x < 200) {
+                    this.y = constrain(this.y, 0, height);
+
+                    if (0 < this.y && this.y < 170) {
+                        this.x = constrain(this.x, 165, 187)
+                    }
+                    else if (170 < this.y && this.y < 250) {
+                        this.x = constrain(this.x, 165, 286);
+                    }
+                    else if (250 < this.y && this.y < 335) {
+                        this.x = constrain(this.x, 65, 187);
+                    }
+                    else if (335 < this.y && this.y < height) {
+                        this.x = constrain(this.x, 165, 187);
+                    }
+                }
+
+                if (200 < this.x && this.x < 250) {
+                    this.y = constrain(this.y, 183, 237)
+                }
+                else if (250 < this.x && this.x < 300) {
+                    this.y = constrain(this.y, 0, height)
+                    if (0 < this.y && this.y < 170) {
+                        this.x = constrain(this.x, 265, 285);
+                    }
+                    else if (170 < this.y && this.y < 250) {
+                        this.x = constrain(this.x, 165, 285);
+                    }
+                    else if (250 < this.y && this.y < 335) {
+                        this.x = constrain(this.x, 265, 385);
+                    }
+                    else if (335 < this.y && this.y < height) {
+                        this.x = constrain(this.x, 265, 285);
+                    }
+                }
+
+
+
+
+                if (300 < this.x && this.x < 350) {
+                    this.y = constrain(this.y, 265, 319)
+                }
+                else if (350 < this.x && this.x < 400) {
+                    this.y = constrain(this.y, 0, height)
+                    if (0 < this.y && this.y < 170) {
+                        this.x = constrain(this.x, 365, 385);
+                    }
+                    else if (170 < this.y && this.y < 250) {
+                        this.x = constrain(this.x, 365, width);
+                    }
+                    else if (250 < this.y && this.y < 335) {
+                        this.x = constrain(this.x, 265, 385);
+                    }
+                    else if (335 < this.y && this.y < height) {
+                        this.x = constrain(this.x, 365, 385);
+                    }
+
+                }
+
+
+                if (400 < this.x && this.x < 450) {
+                    this.y = constrain(this.y, 183, 237)
+                }
+                else if (450 < this.x && this.x < 500) {
+                    this.y = constrain(this.y, 0, height)
+                    if (0 < this.y && this.y < 170) {
+                        this.x = constrain(this.x, 465, width);
+                    }
+                    else if (170 < this.y && this.y < 250) {
+                        this.x = constrain(this.x, 365, width);
+                    }
+                    else if (250 < this.y && this.y < 335) {
+                        this.x = constrain(this.x, 465, width);
+                    }
+                    else if (335 < this.y && this.y < height) {
+                        this.x = constrain(this.x, 465, width);
+                    }
+                }
+            }
+
+            //updates the score when touching the right end of the canvas and makes the ball disappear after 
+            this.addScore = function() {
+                if (this.x >= width) {
+                    score = score + 1;
+                    characters.splice(0, 1)
+
+                }
+            }
+
+
+          //when the ball touches the white bomb obstacles, the player loses a life
+            this.loseLife = function() {
+                if (((50 < this.x && this.x < 100) || (150 < this.x && this.x < 200) || (250 < this.x && this.x < 300) || (350 < this.x && this.x < 400)) && this.y == obY) {
+                    lives = lives - 1;
+                }
+                if (lives == 0) {
+                    lives = 0
+                    noLoop();
+                    textSize(90);
+                    fill(255);
+                    text("Game Over", width / 2, height / 2)
+
+                }
+
+            }
+
+        }
+       
+       //creates a new ball when the mouse is pressed
+        function mousePressed() {
+            characters.push(new Character());
+        }
+    </script>
+
+</head>
+<body>
+<form><input TYPE="button" onClick="history.go(0)" value="Reset"></form>
+</body>
+
+</html>
