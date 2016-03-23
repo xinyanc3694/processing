@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Processing Template</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/addons/p5.dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/p5.js"></script>
+    <script>
+        var ballX
+        var ballY
+        var ballSpeed
+        var obsLeftX
+        var obsLeftY
+        var obsRightY
+        var obsRightX
+        var obsSpeed
+        var obsUpX
+        var obsDownX
+        var obsUpY
+        var obsDownY
+
+
+
+
+        function setup() {
+            createCanvas(500, 500);
+            background(151, 255, 253);
+            ballX = width / 2
+            ballY = height / 2
+            ballSpeed = 4
+            obsLeftX = 125
+            obsRightY = 0
+            obsLeftY = height
+            obsRightX = 375
+            obsSpeed = 5
+            obsUpX = 0
+            obsDownX = width
+            obsUpY = 125
+            obsDownY = 375
+    
+
+        }
+
+        function draw() {
+            background(151, 255, 253)
+            player()
+            ball()
+            obstacles();
+
+
+
+        }
+
+        function keyPressed() {
+            background(151, 255, 253);
+            if (keyCode == UP_ARROW & keyIsPressed) {
+                ballY -= ballSpeed
+            }
+            if (keyCode == DOWN_ARROW & keyIsPressed) {
+                ballY += ballSpeed
+            }
+            if (keyCode == RIGHT_ARROW & keyIsPressed) {
+                ballX += ballSpeed
+            }
+            if (keyCode == LEFT_ARROW & keyIsPressed) {
+                ballX -= ballSpeed
+            }
+
+
+        }
+
+        function obstacles() {
+            fill(255, 0, 0)
+            rect(obsLeftX, obsLeftY, 20, 20)
+            obsLeftY -= obsSpeed
+            if (obsLeftY < 0) {
+                obsLeftY = height
+            }
+            rect(obsRightX, obsRightY, 20, 20)
+            obsRightY += obsSpeed
+            if (obsRightY > height) {
+                obsRightY = 0
+
+            }
+            rect(obsUpX, obsUpY, 20, 20)
+            obsUpX += obsSpeed
+            if (obsUpX > width) {
+                obsUpX = 0
+            }
+            rect(obsDownX, obsDownY, 20, 20)
+            obsDownX -= obsSpeed
+            if (obsDownX < 0) {
+
+                obsDownX = width
+            }
+
+
+        }
+
+        function player() {
+
+            strokeWeight(15)
+            stroke(232, 55, 129)
+            line(ballX, 0, ballX, ballY)
+            stroke(232, 211, 149)
+            line(ballX + 9999, height / 2, ballX, ballY)
+            stroke(255, 13, 255)
+            line(ballX - 9999, height / 2, ballX, ballY)
+            stroke(49, 12, 232)
+            line(ballX, height / 2 + 250, ballX, ballY)
+            noStroke()
+             textSize(20);
+             fill(255);
+            text("Player 1",0,250)
+            text("Player 2",400,250)
+            text("Player 3",220,30)
+            text("Player 4",220,490)
+            
+        }
+
+        function ball() {
+            fill(0)
+            noStroke()
+            
+            ellipse(ballX, ballY, 95, 95)
+            if ((ballX > 375 && ballX <395 && ballY == obsRightY)
+            || (ballX < 145 && ballX > 125 && ballY == obsLeftY )|| (ballY > 375 && ballY < 395 && ballX == obsDownX )|| (ballY < 145 && ballY > 125 && ballX == obsUpX)) {
+                ballX = width / 2
+                ballY = height / 2
+            }
+            
+            
+            if (ballX <=0) {
+                background(151, 255, 253)
+               textSize(30);
+                fill(255,0,100);
+                text("Player 1 won!!", width / 2 -100, height / 2)
+                
+            } 
+          else if (ballX >= width) {
+               background(151, 255, 253)
+                textSize(30);
+                fill(255,0,100);
+                text("Player 2 won!!", width / 2 -100, height / 2)
+
+            }
+            else if (ballY <= 0) {
+                background(151, 255, 253)
+                textSize(30);
+                fill(255,0,100);
+                text("Player 3 won!!", width / 2 -100, height / 2)
+
+            }
+            else if (ballY >= height) {
+               background(151, 255, 253);
+               textSize(30);
+                fill(255,0,100);
+                text("Player 4 won!!", width / 2 -100, height / 2)
+
+            }
+        }
+    </script>
+</head>
+
+<body>
+<form><input TYPE="button" onClick="history.go(0)" value="Reset"></form>
+
+
+</body>
+
+</html>
